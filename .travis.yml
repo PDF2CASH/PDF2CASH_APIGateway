@@ -1,0 +1,30 @@
+sudo: required
+
+env:
+  - DOCKER_COMPOSE_VERSION=1.8.0
+
+services:
+  - docker
+
+before_install:
+  - sudo apt-get update
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  - docker-compose --version
+
+install:
+  - echo 'Iniciando script de instalação'
+  - docker-compose up -d
+  - echo 'Iniciando migração'
+  - docker-compose run web ./manage.py makemigrations
+  - docker-compose run web ./manage.py migrate
+
+
+script:
+  - echo 'Iniciando script de teste'
+  - docker-compose run web ./manage.py test
+
+after_script:
+  - docker-compose down
