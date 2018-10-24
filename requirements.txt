@@ -1,4 +1,6 @@
-Django==2.0
-djangorestframework==3.8
-psycopg2-binary
+Django
+djangorestframework
+flake8
 django-cors-headers
+coverage
+coveralls

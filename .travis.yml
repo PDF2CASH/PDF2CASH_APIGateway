@@ -1,30 +1,42 @@
 sudo: required
-
-env:
-  - DOCKER_COMPOSE_VERSION=1.8.0
-
 services:
   - docker
 
-before_install:
-  - sudo apt-get update
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
-  - docker-compose --version
+language: python
 
-install:
-  - echo 'Iniciando script de instalação'
-  - docker-compose up -d
-  - echo 'Iniciando migração'
-  - docker-compose run web ./manage.py makemigrations
-  - docker-compose run web ./manage.py migrate
+branches:
+  - development
+  - master
+  - /.*release.*/
 
+python:
+  - "3.6"
+
+
+before_script:
+  - docker build -t pdf2identity .
+  - docker run -d -p 8000:8000 --name pdf2identity pdf2identity
+   
 
 script:
-  - echo 'Iniciando script de teste'
-  - docker-compose run web ./manage.py test
+  - docker exec pdf2identity coverage erase
+  - docker exec pdf2identity coverage run --source='.' manage.py test
+  - docker exec pdf2identity coverage report
+  - docker exec pdf2identity flake8
 
 after_script:
-  - docker-compose down
+  - docker stop pdf2identity
+
+after_success: 
+  - coveralls
+
+deploy:
+  - provider: script
+    script: bash scripts/deploy.sh
+    on:
+      branch: development
+
+addons:
+  apt:
+    packages:
+      - docker-ce
