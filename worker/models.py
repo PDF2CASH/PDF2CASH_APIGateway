@@ -5,8 +5,6 @@ from django.core.validators import (
         MaxLengthValidator,
         )
 
-# Create your models here.
-
 
 class Worker(models.Model):
     name = models.CharField(
