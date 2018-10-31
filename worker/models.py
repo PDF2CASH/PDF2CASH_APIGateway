@@ -7,8 +7,12 @@ from django.core.validators import (
 
 # Create your models here.
 
-
 class Worker(models.Model):
+    PERMISSION_CHOICES = (
+        ('1', 'Worker'),
+        ('2', 'Admin'),
+    )
+
     name = models.CharField(
             max_length=40,
             default=None,
@@ -50,7 +54,7 @@ class Worker(models.Model):
                 ]
             )
 
-    password = models.CharField(
+    password = models.CharField (
             max_length=30,
             default=None,
             null=False,
@@ -60,3 +64,15 @@ class Worker(models.Model):
                 MaxLengthValidator(30)
                 ]
             )
+    
+    permission = models.CharField (
+        default=1,
+        max_length=1,
+        null=False,
+        blank=False,
+        choices=PERMISSION_CHOICES,
+            validators=[
+                MinLengthValidator(1),
+                MaxLengthValidator(1)
+                ]
+    )
