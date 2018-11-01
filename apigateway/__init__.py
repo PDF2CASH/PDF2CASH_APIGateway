@@ -7,5 +7,6 @@ __copyright__ = 'Copyright 2011-2017 ECIDI'
 # Version synonym
 VERSION = __version__
 
+
 def get_version():
     return __version__

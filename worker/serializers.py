@@ -5,6 +5,7 @@ from .models import (
 
 
 class WorkerSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Worker
         fields = ('id', 'username', 'email', 'password', 'cpf')

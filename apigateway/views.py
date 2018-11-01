@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
-import requests
-from django.shortcuts import render
-from django.http import HttpResponse
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from .models import Api
-from rest_framework.permissions import IsAuthenticated
+
 
 class gateway(APIView):
 
@@ -14,7 +11,7 @@ class gateway(APIView):
         path = request.path_info.split('/')
         if len(path) < 2:
             return Response('bad request', status=status.HTTP_400_BAD_REQUEST)
-        
+
         apimodel = Api.objects.filter(name=path[2])
         if apimodel.count() != 1:
             return Response('bad request', status=status.HTTP_400_BAD_REQUEST)
@@ -29,7 +26,7 @@ class gateway(APIView):
         else:
             data = res.content
         return Response(data=data, status=res.status_code)
-    
+
     def get(self, request):
         return self.operation(request)
 
@@ -38,9 +35,9 @@ class gateway(APIView):
 
     def put(self, request):
         return self.operation(request)
-    
+
     def patch(self, request):
         return self.operation(request)
-    
+
     def delete(self, request):
         return self.operation(request)
