@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-import requests, json
+import requests
+import json
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
-from rest_framework.authentication import get_authorization_header, BasicAuthentication
-from rest_framework import HTTP_HEADER_ENCODING
+from rest_framework.authentication import BasicAuthentication
+
 
 # Create your models here.
 class Consumer(models.Model):
@@ -17,8 +18,9 @@ class Consumer(models.Model):
     def __str__(self):
         return self.user.username
 
+
 class Api(models.Model):
-    PLUGIN_CHOICE_LIST  = (
+    PLUGIN_CHOICE_LIST = (
         (0, _('Remote auth')),
         (1, _('Basic auth')),
         (2, _('Key auth')),
@@ -33,12 +35,12 @@ class Api(models.Model):
     def check_plugin(self, request):
         if self.plugin == 0:
             return True, ''
-            
+
         elif self.plugin == 1:
             auth = BasicAuthentication()
             try:
                 user, password = auth.authenticate(request)
-            except:
+            except Exception:
                 return False, 'Authentication credentials were not provided'
 
             if self.consumers.filter(user=user):
@@ -56,10 +58,15 @@ class Api(models.Model):
             consumer = self.consumers.all()
             if not consumer:
                 return False, 'consumer need'
-            request.META['HTTP_AUTHORIZATION'] = requests.auth._basic_auth_str(consumer[0].user.username, consumer[0].apikey)
+            request.META['HTTP_AUTHORIZATION'] = requests.auth._basic_auth_str(
+                consumer[0].user.username,
+                consumer[0].apikey
+            )
             return True, ''
         else:
-            raise NotImplementedError("plugin %d not implemented" % self.plugin)
+            raise NotImplementedError(
+                "plugin %d not implemented" % self.plugin
+            )
 
     def send_request(self, request):
         headers = {}
@@ -79,16 +86,22 @@ class Api(models.Model):
             'delete': requests.delete
         }
 
-        for k,v in request.FILES.items():
+        for k, v in request.FILES.items():
             request.data.pop(k)
-        
-        if request.content_type and request.content_type.lower()=='application/json':
+
+        if request.content_type and \
+           request.content_type.lower() == 'application/json':
             data = json.dumps(request.data)
             headers['content-type'] = request.content_type
         else:
             data = request.data
 
-        return method_map[method](url, headers=headers, data=data, files=request.FILES)
+        return method_map[method](
+            url,
+            headers=headers,
+            data=data,
+            files=request.FILES
+        )
 
     def __unicode__(self):
         return self.name

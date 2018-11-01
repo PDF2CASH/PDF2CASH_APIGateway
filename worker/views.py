@@ -8,5 +8,6 @@ from .models import (
 
 
 class WorkerViewSet(viewsets.ModelViewSet):
+
     queryset = Worker.objects.all()
     serializer_class = WorkerSerializer
