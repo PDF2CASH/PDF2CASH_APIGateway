@@ -13,7 +13,8 @@ class WorkerTest(TestCase):
             name='João Carlos de Almeida',
             cpf='03827819400',
             email='joaocarlos@email.com',
-            password='1234560212'
+            password='1234560212',
+            permission='1'
         )
 
     def as_dict(self):
@@ -22,7 +23,8 @@ class WorkerTest(TestCase):
             'name': self.worker1.name,
             'cpf': self.worker1.cpf,
             'email': self.worker1.email,
-            'password': self.worker1.password
+            'password': self.worker1.password,
+            'permission': self.worker1.permission
         }
 
     def test_worker_object_get(self):
@@ -35,7 +37,8 @@ class WorkerTest(TestCase):
             'name': 'Carlos Alberto Rocha',
             'cpf': '94837284799',
             'email': 'carlosalberto@email.com',
-            'password': '23847302'
+            'password': '23847302',
+            'permission': '1'
         }
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, 201)
@@ -58,11 +61,12 @@ class WorkerTest(TestCase):
     def test_worker_object_partial_update(self):
         self.url += f'{self.worker1.id}/'
         data = json.dumps({
-            "id": self.worker1.id,
-            "name": "Roberto Junior Aragão",
-            "cpf": "27491047355",
-            "email": "robertojunior@email.com",
-            "password": "483058492"
+            'id': self.worker1.id,
+            'name': 'Roberto Junior Aragão',
+            'cpf': '27491047355',
+            'email': 'robertojunior@email.com',
+            'password': '483058492',
+            'permission': '1'
         })
         response = self.client.patch(self.url, data, content_type='application/json')
         self.assertEqual(response.status_code, 200)
