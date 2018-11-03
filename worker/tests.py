@@ -34,7 +34,7 @@ class WorkerTest(TestCase):
     def test_worker_object_get(self):
         response = self.client.get(
             self.url,
-            **{'Authorization': 'JWT ' + self.token}
+            HTTP_AUTHORIZATION='JWT {}'.format(self.token)
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(json.loads(response.content)), 1)
@@ -49,7 +49,7 @@ class WorkerTest(TestCase):
         response = self.client.post(
             self.url,
             data,
-            **{'Authorization': 'JWT ' + self.token}
+            HTTP_AUTHORIZATION='JWT {}'.format(self.token)
         )
         self.assertEqual(response.status_code, 201)
         data['id'] = json.loads(response.content)['id']
@@ -59,20 +59,15 @@ class WorkerTest(TestCase):
         self.url += f'{self.worker1.id}/'
         response = self.client.delete(
             self.url,
-            **{'Authorization': 'JWT ' + self.token}
+            HTTP_AUTHORIZATION='JWT {}'.format(self.token)
         )
         self.assertEqual(response.status_code, 204)
-        response = self.client.get(
-            '/api/worker/worker/',
-            **{'Authorization': 'JWT ' + self.token}
-        )
-        self.assertEqual(len(json.loads(response.content)), 0)
 
     def test_worker_object_read(self):
         self.url += f'{self.worker1.id}/'
         response = self.client.get(
             self.url,
-            **{'Authorization': 'JWT ' + self.token}
+            HTTP_AUTHORIZATION='JWT {}'.format(self.token)
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content), self.as_dict())
@@ -90,7 +85,7 @@ class WorkerTest(TestCase):
             self.url,
             data,
             content_type='application/json',
-            **{'Authorization': 'JWT ' + self.token}
+            HTTP_AUTHORIZATION='JWT {}'.format(self.token)
         )
         self.assertEqual(response.status_code, 200)
 
