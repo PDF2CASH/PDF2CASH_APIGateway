@@ -1,31 +1,43 @@
 # -*- coding: utf-8 -*-
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.views import APIView
+from django.views import View
+import json
 from .models import Api
+from django.http import HttpResponse
+from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
 
+class gateway(View):
 
-class gateway(APIView):
-
-    def operation(self, request):
+    def operation(self, request):        
+        if not request.META.get('HTTP_AUTHORIZATION'):
+            return HttpResponse(
+                json.dumps({'error': 'Authorization is required'}),
+                status=400
+            )
+        token = request.META['HTTP_AUTHORIZATION'].replace('JWT ', '')
+        data = {'token': token}
+        if not VerifyJSONWebTokenSerializer().validate(data):
+            return HttpResponse(
+                json.dumps({'error': 'Authorization is required'}),
+                status=400
+            )
         path = request.path_info.split('/')
         if len(path) < 2:
-            return Response('bad request', status=status.HTTP_400_BAD_REQUEST)
+            return HttpResponse('bad request', status=400)
 
         apimodel = Api.objects.filter(name=path[2])
         if apimodel.count() != 1:
-            return Response('bad request', status=status.HTTP_400_BAD_REQUEST)
+            return HttpResponse('bad request', status=400)
 
         valid, msg = apimodel[0].check_plugin(request)
         if not valid:
-            return Response(msg, status=status.HTTP_400_BAD_REQUEST)
+            return HttpResponse(msg, status=400)
 
         res = apimodel[0].send_request(request)
         if res.headers.get('Content-Type', '').lower() == 'application/json':
             data = res.json()
         else:
             data = res.content
-        return Response(data=data, status=res.status_code)
+        return HttpResponse(json.dumps(data), status=res.status_code)
 
     def get(self, request):
         return self.operation(request)
