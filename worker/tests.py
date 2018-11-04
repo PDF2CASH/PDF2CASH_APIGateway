@@ -74,17 +74,16 @@ class WorkerTest(TestCase):
 
     def test_worker_object_partial_update(self):
         self.url += f'{self.worker1.id}/'
-        data = json.dumps({
-            "id": self.worker1.id,
-            "username": "aloaloaa",
-            "cpf": "27491047355",
-            "email": "robertojunior@email.com",
-            "password": "483058492"
-        })
-        response = self.client.patch(
+        data = {
+            'id': self.worker1.id,
+            'username': 'aloaloaaaaaa',
+            'cpf': '27491047355',
+            'email': 'robertojunior@email.com',
+            'password': '483058492'
+        }
+        response = self.client.post(
             self.url,
             data,
-            content_type='application/json',
             HTTP_AUTHORIZATION='JWT {}'.format(self.token)
         )
         self.assertEqual(response.status_code, 200)
