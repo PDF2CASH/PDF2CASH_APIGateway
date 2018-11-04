@@ -27,4 +27,3 @@ urlpatterns = [
         path(r'refresh/', refresh_jwt_token),
     ])),
 ]
-

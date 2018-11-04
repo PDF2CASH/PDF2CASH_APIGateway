@@ -5,9 +5,10 @@ from .models import Api
 from django.http import HttpResponse
 from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
 
+
 class gateway(View):
 
-    def operation(self, request):        
+    def operation(self, request):
         if not request.META.get('HTTP_AUTHORIZATION'):
             return HttpResponse(
                 json.dumps({'error': 'Authorization is required'}),
