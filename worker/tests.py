@@ -88,5 +88,13 @@ class WorkerTest(TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+    def test_refresh_jwt_token(self):
+
+        response = self.client.post('/api/refresh/', {
+            'token': self.token,
+        })
+
+        self.assertIsInstance(json.loads(response.content), dict)
+
     def tearDown(self):
         Worker.objects.all().delete()
