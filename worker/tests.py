@@ -15,10 +15,10 @@ class WorkerTest(TestCase):
             email='carlosalberto@email.com',
             password='12345678'
         )
-        response = self.client.post('/api/authenticate/', {
+        response = self.client.post('/api/authenticate/', json.dumps({
             'username': 'aloaloalo',
             'password': '12345678'
-        })
+        }), content_type = 'application/json') 
 
         self.token = json.loads(response.content)['token']
 
@@ -48,9 +48,11 @@ class WorkerTest(TestCase):
         }
         response = self.client.post(
             self.url,
-            data,
-            HTTP_AUTHORIZATION='JWT {}'.format(self.token)
+            json.dumps(data),
+            HTTP_AUTHORIZATION='JWT {}'.format(self.token),
+            content_type = 'application/json',
         )
+
         self.assertEqual(response.status_code, 201)
         data['id'] = json.loads(response.content)['id']
         self.assertEqual(json.loads(response.content), data)
@@ -83,16 +85,18 @@ class WorkerTest(TestCase):
         }
         response = self.client.post(
             self.url,
-            data,
-            HTTP_AUTHORIZATION='JWT {}'.format(self.token)
+            json.dumps(data),
+            HTTP_AUTHORIZATION='JWT {}'.format(self.token),
+            content_type = 'application/json',
         )
         self.assertEqual(response.status_code, 200)
 
     def test_refresh_jwt_token(self):
 
-        response = self.client.post('/api/refresh/', {
-            'token': self.token,
-        })
+        response = self.client.post('/api/refresh/',
+            json.dumps({'token': self.token,}),
+            content_type = 'application/json'
+        )
 
         self.assertIsInstance(json.loads(response.content), dict)
 
