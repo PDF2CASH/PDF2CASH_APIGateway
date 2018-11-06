@@ -11,11 +11,12 @@ from django.http import Http404
 from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
 from rest_framework_jwt.serializers import RefreshJSONWebTokenSerializer
 from rest_framework_jwt.serializers import JSONWebTokenSerializer
+from django.views.decorators.csrf import csrf_exempt
 
-
+@csrf_exempt
 def obtain_jwt_token(request):
     if request.method == 'POST':
-        data = request.POST
+        data = json.loads(request.body)
         if JSONWebTokenSerializer().validate(data):
             data = JSONWebTokenSerializer().validate(data)
             return HttpResponse(
@@ -36,7 +37,7 @@ def obtain_jwt_token(request):
 
 def refresh_jwt_token(request):
     if request.method == 'POST':
-        data = request.POST
+        data = json.loads(request.body)
         if RefreshJSONWebTokenSerializer().validate(data):
             data = RefreshJSONWebTokenSerializer().validate(data)
             return HttpResponse(
@@ -87,7 +88,7 @@ class WorkerCreateList(View):
                 json.dumps({'error': 'Authorization is required'}),
                 status=400
             )
-        serializer = WorkerSerializer(data=request.POST)
+        serializer = WorkerSerializer(data=json.loads(request.body))
         if serializer.is_valid():
             serializer.save()
             return HttpResponse(json.dumps(serializer.data), status=201)
@@ -134,7 +135,7 @@ class WorkerDeleteShowUpdate(View):
                 status=400
             )
         worker = get_object(pk)
-        serializer = WorkerSerializer(worker, data=request.POST)
+        serializer = WorkerSerializer(worker, data=json.loads(request.body))
         if serializer.is_valid():
             serializer.save()
             return HttpResponse(json.dumps(serializer.data))
