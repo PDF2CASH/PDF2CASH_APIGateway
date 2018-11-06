@@ -105,19 +105,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-CORS_ORIGIN_WHITELIST = (
-    'localhost:3000',
-)
-
-CORS_ALLOW_METHODS = (
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
-)
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
@@ -143,16 +130,16 @@ CORS_ORIGIN_WHITELIST = (
     '127.0.0.1:3000'
 )
 
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-    ),
-}
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+)
+
+
 
 JWT_AUTH = {
     'JWT_ENCODE_HANDLER':
@@ -187,5 +174,5 @@ JWT_AUTH = {
 
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
     'JWT_AUTH_COOKIE': None,
-
 }
+CSRF_COOKIE_SECURE = False
