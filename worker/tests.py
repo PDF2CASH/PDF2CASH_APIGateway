@@ -46,20 +46,20 @@ class WorkerTest(TestCase):
         self.assertEqual(json.loads(response.content), data)
 
     def test_worker_object_delete(self):
-        self.url += f'{self.worker1.id}/'
+        self.url += str(self.worker1.id) + '/'
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, 204)
         response = self.client.get('/api/worker/worker/')
         self.assertEqual(len(json.loads(response.content)), 0)
 
     def test_worker_object_read(self):
-        self.url += f'{self.worker1.id}/'
+        self.url += str(self.worker1.id) + '/'
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content), self.as_dict())
 
     def test_worker_object_partial_update(self):
-        self.url += f'{self.worker1.id}/'
+        self.url += str(self.worker1.id) + '/'
         data = json.dumps({
             'id': self.worker1.id,
             'name': 'Roberto Junior Aragão',
