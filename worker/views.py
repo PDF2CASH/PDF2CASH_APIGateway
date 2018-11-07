@@ -13,6 +13,7 @@ from rest_framework_jwt.serializers import RefreshJSONWebTokenSerializer
 from rest_framework_jwt.serializers import JSONWebTokenSerializer
 from django.views.decorators.csrf import csrf_exempt
 
+
 @csrf_exempt
 def obtain_jwt_token(request):
     if request.method == 'POST':

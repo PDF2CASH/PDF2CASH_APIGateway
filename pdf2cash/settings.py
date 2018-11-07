@@ -139,8 +139,6 @@ CORS_ALLOW_METHODS = (
     'PUT',
 )
 
-
-
 JWT_AUTH = {
     'JWT_ENCODE_HANDLER':
     'rest_framework_jwt.utils.jwt_encode_handler',
