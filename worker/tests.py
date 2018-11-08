@@ -13,12 +13,18 @@ class WorkerTest(TestCase):
             username='aloaloalo',
             cpf='94837284799',
             email='carlosalberto@email.com',
-            password='12345678'
+            password='12345678',
+            permission='1'
         )
-        response = self.client.post('/api/authenticate/', json.dumps({
-            'username': 'aloaloalo',
-            'password': '12345678'
-            }), content_type='application/json')
+
+        response = self.client.post(
+            '/api/authenticate/',
+            json.dumps({
+                'username': 'aloaloalo',
+                'password': '12345678'
+            }),
+            content_type='application/json'
+        )
         self.token = json.loads(response.content)['token']
 
     def as_dict(self):
@@ -27,7 +33,8 @@ class WorkerTest(TestCase):
             'username': self.worker1.username,
             'cpf': self.worker1.cpf,
             'email': self.worker1.email,
-            'password': self.worker1.password
+            'password': self.worker1.password,
+            'permission': self.worker1.permission
         }
 
     def test_worker_object_get(self):
@@ -43,8 +50,10 @@ class WorkerTest(TestCase):
             'username': 'aloaloaloalo',
             'cpf': '94831284799',
             'email': 'carlosalberto@email.com',
-            'password': '123456789'
+            'password': '123456789',
+            'permission': '1'
         }
+
         response = self.client.post(
             self.url,
             json.dumps(data),
@@ -55,6 +64,42 @@ class WorkerTest(TestCase):
         self.assertEqual(response.status_code, 201)
         data['id'] = json.loads(response.content)['id']
         self.assertEqual(json.loads(response.content), data)
+
+    def test_admin_object_post(self):
+        data = {
+            'username': 'victormota',
+            'cpf': '94837284119',
+            'email': 'victormota@email.com',
+            'password': '12345678',
+            'permission': '2'
+        }
+
+        response = self.client.post(
+            self.url,
+            json.dumps(data),
+            HTTP_AUTHORIZATION='JWT {}'.format(self.token),
+            content_type='application/json',
+        )
+
+        self.assertEqual(response.status_code, 201)
+        data['id'] = json.loads(response.content)['id']
+        self.assertEqual(json.loads(response.content), data)
+
+        data2 = {
+            'username': 'joaopedro',
+            'cpf': '94837544119',
+            'email': 'joaopedro@email.com',
+            'password': '12345678',
+            'permission': '2'
+        }
+
+        response = self.client.post(
+            self.url,
+            json.dumps(data2),
+            HTTP_AUTHORIZATION='JWT {}'.format(self.token),
+            content_type='application/json',
+        )
+        self.assertEqual(response.status_code, 400)
 
     def test_worker_object_delete(self):
         self.url += f'{self.worker1.id}/'
@@ -80,7 +125,8 @@ class WorkerTest(TestCase):
             'username': 'aloaloaaaaaa',
             'cpf': '27491047355',
             'email': 'robertojunior@email.com',
-            'password': '483058492'
+            'password': '483058492',
+            'permission': '1'
         }
         response = self.client.post(
             self.url,
