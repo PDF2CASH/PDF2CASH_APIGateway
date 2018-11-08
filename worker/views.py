@@ -91,6 +91,14 @@ class WorkerCreateList(View):
             )
         serializer = WorkerSerializer(data=json.loads(request.body))
         if serializer.is_valid():
+            data = json.loads(request.body)
+            if data['permission'] == '2':
+                workers = Worker.objects.filter(permission='2')
+                if len(workers) > 0:
+                    return HttpResponse(
+                        json.dumps({'error': 'Already have one admin'}),
+                        status=400
+                    )
             serializer.save()
             return HttpResponse(json.dumps(serializer.data), status=201)
         return HttpResponse(json.dumps(serializer.errors), status=400)
