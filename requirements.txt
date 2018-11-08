@@ -1,6 +1,9 @@
-Django
-djangorestframework
-flake8
+Django==2.0
+djangorestframework==3.8
+psycopg2-binary
 django-cors-headers
+djangorestframework-jwt
+requests
+flake8
 coverage
 coveralls
