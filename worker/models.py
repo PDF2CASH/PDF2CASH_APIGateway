@@ -26,6 +26,16 @@ class Worker(User):
         ]
     )
 
+    name = models.CharField(
+        max_length=40,
+        default='',
+        blank=False,
+        validators=[
+            MinLengthValidator(9),
+            MaxLengthValidator(40)
+        ]
+    )
+
     cpf = models.CharField(
         max_length=11,
         default='None',
