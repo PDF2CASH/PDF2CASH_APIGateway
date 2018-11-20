@@ -26,8 +26,6 @@ class Worker(User):
         ]
     )
 
-    name = models.CharField(max_length=255, blank=True)
-
     cpf = models.CharField(
         max_length=11,
         default='None',
