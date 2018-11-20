@@ -57,6 +57,7 @@ def refresh_jwt_token(request):
             status=400
         )
 
+
 class WorkerCreateList(View):
 
     def get(self, request):
