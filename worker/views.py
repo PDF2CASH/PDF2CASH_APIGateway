@@ -57,7 +57,6 @@ def refresh_jwt_token(request):
             status=400
         )
 
-
 class WorkerCreateList(View):
 
     def get(self, request):
@@ -78,18 +77,21 @@ class WorkerCreateList(View):
         return HttpResponse(json.dumps(serializer.data))
 
     def post(self, request):
-        if not request.META.get('HTTP_AUTHORIZATION'):
-            return HttpResponse(
-                json.dumps({'error': 'Authorization is required'}),
-                status=400
-            )
-        token = request.META['HTTP_AUTHORIZATION'].replace('JWT ', '')
-        data = {'token': token}
-        if not VerifyJSONWebTokenSerializer().validate(data):
-            return HttpResponse(
-                json.dumps({'error': 'Authorization is required'}),
-                status=400
-            )
+        worker = Worker.objects.all().count()
+        if worker > 0:
+
+            if not request.META.get('HTTP_AUTHORIZATION'):
+                return HttpResponse(
+                    json.dumps({'error': 'Authorization is required'}),
+                    status=400
+                )
+            token = request.META['HTTP_AUTHORIZATION'].replace('JWT ', '')
+            data = {'token': token}
+            if not VerifyJSONWebTokenSerializer().validate(data):
+                return HttpResponse(
+                    json.dumps({'error': 'Authorization is required'}),
+                    status=400
+                )
         try:
             data = json.loads(request.body)
             if data['permission'] == '2':
