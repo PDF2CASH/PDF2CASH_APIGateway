@@ -12,6 +12,7 @@ from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
 from rest_framework_jwt.serializers import RefreshJSONWebTokenSerializer
 from rest_framework_jwt.serializers import JSONWebTokenSerializer
 from django.views.decorators.csrf import csrf_exempt
+from django.core.exceptions import ValidationError
 
 
 @csrf_exempt
@@ -77,20 +78,22 @@ class WorkerCreateList(View):
         return HttpResponse(json.dumps(serializer.data))
 
     def post(self, request):
-        if not request.META.get('HTTP_AUTHORIZATION'):
-            return HttpResponse(
-                json.dumps({'error': 'Authorization is required'}),
-                status=400
-            )
-        token = request.META['HTTP_AUTHORIZATION'].replace('JWT ', '')
-        data = {'token': token}
-        if not VerifyJSONWebTokenSerializer().validate(data):
-            return HttpResponse(
-                json.dumps({'error': 'Authorization is required'}),
-                status=400
-            )
-        serializer = WorkerSerializer(data=json.loads(request.body))
-        if serializer.is_valid():
+        worker = Worker.objects.all().count()
+        if worker > 0:
+
+            if not request.META.get('HTTP_AUTHORIZATION'):
+                return HttpResponse(
+                    json.dumps({'error': 'Authorization is required'}),
+                    status=400
+                )
+            token = request.META['HTTP_AUTHORIZATION'].replace('JWT ', '')
+            data = {'token': token}
+            if not VerifyJSONWebTokenSerializer().validate(data):
+                return HttpResponse(
+                    json.dumps({'error': 'Authorization is required'}),
+                    status=400
+                )
+        try:
             data = json.loads(request.body)
             if data['permission'] == '2':
                 workers = Worker.objects.filter(permission='2')
@@ -99,9 +102,27 @@ class WorkerCreateList(View):
                         json.dumps({'error': 'Already have one admin'}),
                         status=400
                     )
-            serializer.save()
-            return HttpResponse(json.dumps(serializer.data), status=201)
-        return HttpResponse(json.dumps(serializer.errors), status=400)
+            worker = Worker.objects.create_user(
+                username=data['username'],
+                password=data['password'],
+                cpf=data['cpf'],
+                email=data['email'],
+                permission=data['permission'])
+            worker_dict = worker.__dict__
+            worker_dict_real = {}
+            worker_dict_real['id'] = worker_dict['id']
+            worker_dict_real['username'] = worker_dict['username']
+            worker_dict_real['password'] = worker_dict['password']
+            worker_dict_real['email'] = worker_dict['email']
+            worker_dict_real['cpf'] = worker_dict['cpf']
+            worker_dict_real['permission'] = worker_dict['permission']
+
+        except ValidationError:
+            return HttpResponse(status=400)
+
+        return HttpResponse(
+            json.dumps(worker_dict_real),
+            status=201)
 
 
 def get_object(pk):

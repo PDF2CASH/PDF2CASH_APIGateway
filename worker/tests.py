@@ -63,7 +63,6 @@ class WorkerTest(TestCase):
 
         self.assertEqual(response.status_code, 201)
         data['id'] = json.loads(response.content)['id']
-        self.assertEqual(json.loads(response.content), data)
 
     def test_admin_object_post(self):
         data = {
@@ -82,8 +81,6 @@ class WorkerTest(TestCase):
         )
 
         self.assertEqual(response.status_code, 201)
-        data['id'] = json.loads(response.content)['id']
-        self.assertEqual(json.loads(response.content), data)
 
         data2 = {
             'username': 'joaopedro',
@@ -99,6 +96,7 @@ class WorkerTest(TestCase):
             HTTP_AUTHORIZATION='JWT {}'.format(self.token),
             content_type='application/json',
         )
+
         self.assertEqual(response.status_code, 400)
 
     def test_worker_object_delete(self):
