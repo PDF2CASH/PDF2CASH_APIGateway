@@ -11,11 +11,10 @@ from django.http import Http404
 from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
 from rest_framework_jwt.serializers import RefreshJSONWebTokenSerializer
 from rest_framework_jwt.serializers import JSONWebTokenSerializer
-from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
+from django.core.mail import EmailMessage
 
 
-@csrf_exempt
 def obtain_jwt_token(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -49,6 +48,25 @@ def refresh_jwt_token(request):
         else:
             return HttpResponse(
                 json.dumps({'error': 'refresh error'}),
+                status=400
+            )
+    else:
+        return HttpResponse(
+            json.dumps({'error': 'just post method is accepted'}),
+            status=400
+        )
+
+
+def verify_jwt_token(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        if VerifyJSONWebTokenSerializer().validate(data):
+            data = VerifyJSONWebTokenSerializer().validate(data)
+            return HttpResponse(
+                status=200
+            )
+        else:
+            return HttpResponse(
                 status=400
             )
     else:
@@ -108,6 +126,15 @@ class WorkerCreateList(View):
                 cpf=data['cpf'],
                 email=data['email'],
                 permission=data['permission'])
+            email = EmailMessage('Senha PDF2CASH!!', data['password'], to=[data['email']])
+            email.send()
+            # send_mail(
+            #     'Senha PDF2CASH!!',
+            #     data['password'],
+            #     'pdf2cash@gmail.com',
+            #     [data['email']],
+            #     fail_silently=False,
+            # )
             worker_dict = worker.__dict__
             worker_dict_real = {}
             worker_dict_real['id'] = worker_dict['id']

@@ -173,3 +173,12 @@ JWT_AUTH = {
     'JWT_AUTH_COOKIE': None,
 }
 CSRF_COOKIE_SECURE = False
+
+# Email configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+DEFAULT_FROM_EMAIL = 'Bruno Matias <pdf2cash@gmail.com>'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'pdf2cash@gmail.com'
+EMAIL_HOST_PASSWORD = 'Pdf22c@sh*'
+EMAIL_PORT = 587
