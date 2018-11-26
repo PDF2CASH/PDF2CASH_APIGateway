@@ -49,7 +49,7 @@ class WorkerTest(TestCase):
         data = {
             'username': 'aloaloaloalo',
             'cpf': '94831284799',
-            'email': 'carlosalberto@email.com',
+            'email': 'danielmarques786@gmail.com',
             'password': '123456789',
             'permission': '1'
         }
@@ -143,6 +143,16 @@ class WorkerTest(TestCase):
         )
 
         self.assertIsInstance(json.loads(response.content), dict)
+
+    def test_verify_jwt_token(self):
+        response = self.client.post(
+            '/api/api-token-verify/',
+            json.dumps({
+                'token': self.token,
+            }), content_type='application/json'
+        )
+
+        self.assertEqual(response.status_code, 200)
 
     def tearDown(self):
         Worker.objects.all().delete()
