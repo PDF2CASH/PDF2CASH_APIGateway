@@ -12,7 +12,7 @@ from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
 from rest_framework_jwt.serializers import RefreshJSONWebTokenSerializer
 from rest_framework_jwt.serializers import JSONWebTokenSerializer
 from django.core.exceptions import ValidationError
-from django.core.mail import EmailMessage
+import smtplib
 
 
 def obtain_jwt_token(request):
@@ -126,15 +126,11 @@ class WorkerCreateList(View):
                 cpf=data['cpf'],
                 email=data['email'],
                 permission=data['permission'])
-            email = EmailMessage('Senha PDF2CASH!!', data['password'], to=[data['email']])
-            email.send()
-            # send_mail(
-            #     'Senha PDF2CASH!!',
-            #     data['password'],
-            #     'pdf2cash@gmail.com',
-            #     [data['email']],
-            #     fail_silently=False,
-            # )
+            server = smtplib.SMTP('smtp.gmail.com', 587)
+            server.starttls()
+            server.login("pdf2cash@gmail.com", "Pdf22c@sh*")
+            server.sendmail("pdf2cash@gmail.com", data['email'], "Subject: PDF2CASH Senha!! \n\n" + data['password'])
+            server.quit()
             worker_dict = worker.__dict__
             worker_dict_real = {}
             worker_dict_real['id'] = worker_dict['id']
