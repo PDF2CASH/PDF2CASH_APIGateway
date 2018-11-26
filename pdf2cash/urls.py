@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from worker.views import obtain_jwt_token, refresh_jwt_token
-
+from rest_framework_jwt.views import verify_jwt_token
 
 urlpatterns = [
     path('api/', include([
@@ -25,5 +25,6 @@ urlpatterns = [
         path(r'service/', include('apigateway.urls')),
         path(r'authenticate/', obtain_jwt_token),
         path(r'refresh/', refresh_jwt_token),
+        path(r'^api-token-verify/', verify_jwt_token),
     ])),
 ]
