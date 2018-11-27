@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/PDF2CASH/PDF2CASH_IdentityManagement.svg?branch=development)](https://travis-ci.org/PDF2CASH/PDF2CASH_IdentityManagement)
 [![Coverage Status](https://coveralls.io/repos/github/PDF2CASH/PDF2CASH_IdentityManagement/badge.svg?branch=development)](https://coveralls.io/github/PDF2CASH/PDF2CASH_IdentityManagement?branch=development)
-# PDF2CASH_IdentityManagement
+# PDF2CASH_APIGateway
 
 ## Iniciando usando docker
 
