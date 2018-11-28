@@ -112,7 +112,11 @@ class WorkerCreateList(View):
                     status=400
                 )
         try:
-            data = json.loads(request.body)
+            data = None
+            if request.body:
+                data = json.loads(request.body)
+            elif request.POST:
+                data = request.POST
             if data['permission'] == '2':
                 workers = Worker.objects.filter(permission='2')
                 if len(workers) > 0:
