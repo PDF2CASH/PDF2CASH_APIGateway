@@ -75,7 +75,7 @@ class Api(models.Model):
         # headers['content-type'] = request.content_type
 
         strip = '/service' + self.request_path
-        full_path = request.get_full_path()[len(strip):]
+        full_path = request.get_full_path()[len(strip)+4:]
         url = self.upstream_url + full_path
         method = request.method.lower()
         method_map = {
@@ -86,15 +86,11 @@ class Api(models.Model):
             'delete': requests.delete
         }
 
-        for k, v in request.FILES.items():
-            request.data.pop(k)
-
-        if request.content_type and \
-           request.content_type.lower() == 'application/json':
-            data = json.dumps(request.data)
-            headers['content-type'] = request.content_type
-        else:
-            data = request.data
+        data = None
+        if request.body:
+            data = json.loads(request.body)
+        elif request.POST:
+            data = request.POST
 
         return method_map[method](
             url,
