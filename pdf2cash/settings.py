@@ -123,9 +123,14 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+if 'HOST_DOMAIN' in os.environ:
+    HOST_DOMAIN = os.environ['HOST_DOMAIN']
+else:
+    HOST_DOMAIN = 'localhost:3000'
+
 CORS_ORIGIN_WHITELIST = (
     '0.0.0.0:3000',
-    'localhost:3000',
+    HOST_DOMAIN,
     '127.0.0.1:3000'
 )
 
