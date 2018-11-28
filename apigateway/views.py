@@ -24,8 +24,8 @@ class gateway(View):
         path = request.path_info.split('/')
         if len(path) < 2:
             return HttpResponse('bad request', status=400)
-
-        apimodel = Api.objects.filter(name=path[2])
+       
+        apimodel = Api.objects.filter(name=path[3])
         if apimodel.count() != 1:
             return HttpResponse('bad request', status=400)
 
@@ -38,7 +38,7 @@ class gateway(View):
             data = res.json()
         else:
             data = res.content
-        return HttpResponse(json.dumps(data), status=res.status_code)
+        return HttpResponse(data, status=res.status_code)
 
     def get(self, request):
         return self.operation(request)

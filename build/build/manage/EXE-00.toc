@@ -48,7 +48,7 @@
  [],
  False,
  False,
- 1543340282,
+ 1543366804,
  [('run',
    '/home/wallacy/.local/lib/python3.7/site-packages/PyInstaller/bootloader/Linux-64bit/run',
    'EXECUTABLE')])
