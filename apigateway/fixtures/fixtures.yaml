@@ -1,0 +1,23 @@
+- model: apigateway.api
+  pk: 1
+  fields:
+    name: pdftoinvoice
+    request_path: /pdftoinvoice/
+    upstream_url: http://localhost:4001/
+    plugin: 0
+
+- model: apigateway.api
+  pk: 2
+  fields:
+    name: parser
+    request_path: /parser/
+    upstream_url: http://localhost:10022/
+    plugin: 0
+
+- model: apigateway.api
+  pk: 3
+  fields:
+    name: bi
+    request_path: /bi/
+    upstream_url: http://localhost:4002/
+    plugin: 0

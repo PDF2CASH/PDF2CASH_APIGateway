@@ -1,0 +1,47 @@
+- model: auth.user
+  pk: 1
+  fields:
+    username: brianlui
+    password: 12345678
+
+- model: worker.worker
+  pk: 1
+  fields:
+    permission: 1
+    cpf: 94574285723
+
+- model: auth.user
+  pk: 2
+  fields:
+    username: danespimenta
+    password: 05746345
+
+- model: worker.worker
+  pk: 2
+  fields:
+    permission: 1
+    cpf: 14375696723
+
+- model: auth.user
+  pk: 3
+  fields:
+    username: wictorgirardi
+    password: 69045345
+
+- model: worker.worker
+  pk: 3
+  fields:
+    permission: 1
+    cpf: 90578636945
+
+- model: auth.user
+  pk: 4
+  fields:
+    username: brunomatias
+    password: 83573585
+
+- model: worker.worker
+  pk: 4
+  fields:
+    permission: 2
+    cpf: 47684535476

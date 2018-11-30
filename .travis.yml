@@ -16,7 +16,7 @@ python:
 before_script:
   - docker build -t pdf2identity .
   - docker run -d -p 8000:8000 --name pdf2identity pdf2identity
-   
+
 
 script:
   - docker exec pdf2identity coverage erase
@@ -27,7 +27,7 @@ script:
 after_script:
   - docker stop pdf2identity
 
-after_success: 
+after_success:
   - coveralls
 
 deploy:
@@ -35,6 +35,10 @@ deploy:
     script: bash scripts/deploy.sh
     on:
       branch: development
+  - provider: script
+    script: bash scripts/sendZip.sh
+    on:
+      branch: master
 
 addons:
   apt:

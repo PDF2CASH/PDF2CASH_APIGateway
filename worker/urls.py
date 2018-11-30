@@ -1,10 +1,8 @@
-from django.conf.urls import url, include
 from . import views
-from rest_framework import routers
+from django.urls import path
 
-router = routers.DefaultRouter()
-router.register(r'worker', views.WorkerViewSet)
 
 urlpatterns = [
-    url(r'^', include(router.urls)),
+    path(r'worker/', views.WorkerCreateList.as_view()),
+    path(r'worker/<int:pk>/', views.WorkerDeleteShowUpdate.as_view()),
 ]
